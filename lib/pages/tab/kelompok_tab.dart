@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import '../detail_kelompok.dart';
 
@@ -12,17 +13,6 @@ class KelompokTab extends StatefulWidget {
 }
 
 class _KelompokTabState extends State<KelompokTab> {
-  // menampung data json offline
-  List _anggota = [];
-
-  Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/kelompok.json');
-    final data = json.decode(response);
-    setState(() {
-      _anggota = data['mahasiswa'];
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,56 +21,47 @@ class _KelompokTabState extends State<KelompokTab> {
         elevation: 0.0,
         title: const Text('Tim seperjuangan Praktikum'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(25),
-        child: Column(
-          children: [
-            _anggota.isNotEmpty
-                ? Expanded(
-                    child: ListView.builder(
-                      itemCount: _anggota.length,
-                      itemBuilder: (context, index) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: Card(
-                            key: ValueKey(_anggota[index]["id"]),
-                            margin: const EdgeInsets.all(10),
-                            color: Colors.redAccent.shade100,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return DetailKelompokPage(
-                                    name: _anggota[index]["name"],
-                                    nim: _anggota[index]["nim"],
-                                    desc: _anggota[index]["desc"],
-                                  );
-                                }));
-                              },
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  child: Text(_anggota[index]["id"]),
-                                ),
-                                title: Text(_anggota[index]["name"]),
-                                subtitle: Text(_anggota[index]["nim"]),
-                              ),
-                            ),
-                          ),
+      body: FutureBuilder(
+        future: _dataKelompok(),
+        builder: (context, snapshoot) {
+          if (snapshoot.hasData) {
+            return ListView.builder(
+                itemCount: snapshoot.data!.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return DetailKelompokPage(
+                          name: snapshoot.data![index]['name'],
+                          nim: snapshoot.data![index]['nim'],
+                          desc: snapshoot.data![index]['desc'],
+                          bidang: snapshoot.data![index]['bidang'],
                         );
-                      },
+                      }));
+                    },
+                    leading: CircleAvatar(
+                      child: Text(snapshoot.data![index]['id']),
                     ),
-                  )
-                : Container(),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.redAccent,
-              ),
-              onPressed: readJson,
-              child: const Text('Lihat data'),
-            ),
-          ],
-        ),
+                    title: Text(snapshoot.data![index]['name']),
+                  );
+                });
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
+  }
+}
+
+Future<List<dynamic>> _dataKelompok() async {
+  var response =
+      await http.get(Uri.parse('https://api.npoint.io/ba3cfefd41a46d012d6d'));
+  if (response.statusCode == 200) {
+    var data = json.decode(response.body)['mahasiswa'];
+    return data;
+  } else {
+    throw Exception('Failed to Load');
   }
 }

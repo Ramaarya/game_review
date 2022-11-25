@@ -4,12 +4,14 @@ class DetailKelompokPage extends StatelessWidget {
   DetailKelompokPage({
     required this.name,
     required this.nim,
+    required this.bidang,
     required this.desc,
   });
 
   String name;
   String nim;
   String desc;
+  String bidang;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,13 @@ class DetailKelompokPage extends StatelessWidget {
                 const SizedBox(height: 10),
                 Text(
                   nim,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  bidang,
                   style: const TextStyle(
                     fontSize: 18,
                   ),
