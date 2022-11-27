@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // import halaman
 import '../pages/tab/game_review_tab.dart';
-import '../pages/tab/kelompok_tab.dart';
+import './tab/pc_games.dart';
 import '../pages/tab/about_me_tab.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> tabs = const [
     GameReviewTab(),
-    KelompokTab(),
+    PCGamesTab(),
     AboutMeTab(),
   ];
 
@@ -33,11 +33,11 @@ class _HomePageState extends State<HomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.gamepad),
-            label: 'games',
+            label: 'Review',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: 'Kelompok',
+            icon: Icon(Icons.computer),
+            label: 'PC games',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
