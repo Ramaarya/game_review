@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.computer),
-            label: 'PC games',
+            label: 'All games',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

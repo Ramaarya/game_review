@@ -19,7 +19,7 @@ class PCGamesTab extends StatelessWidget {
         elevation: 0.0,
       ),
       body: FutureBuilder<List<dynamic>>(
-        future: _fetchNews(),
+        future: _fetchdDataGame(),
         builder: (context, snapshot) {
           // pwngkonsian jika data berhasil di ambil
           if (snapshot.hasData) {
@@ -69,7 +69,7 @@ class PCGamesTab extends StatelessWidget {
 }
 
 // fungsi mengambil data dari APi
-Future<List<dynamic>> _fetchNews() async {
+Future<List<dynamic>> _fetchdDataGame() async {
   var result =
       await http.get(Uri.parse('https://www.freetogame.com/api/games'));
   var response = json.decode(result.body);
